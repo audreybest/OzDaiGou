@@ -11,7 +11,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 public class WebCrawler {
 
 
-    public static void main(String[] args) {
+    public static void crawl(String[] args) {
 
         String baseUri = "https://www.healthday.com.au";
 //        String baseUri = "https://shop.healthday.com.au";
