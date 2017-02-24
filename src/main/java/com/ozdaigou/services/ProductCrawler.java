@@ -3,11 +3,15 @@ package com.ozdaigou.services;
 import com.ozdaigou.entities.Product;
 import com.ozdaigou.exceptions.GetProductPageFailException;
 import com.ozdaigou.exceptions.LoginFailException;
+import com.sun.deploy.util.URLUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -88,12 +92,13 @@ class ProductCrawler {
 
     }
 
-    private void fetchProductsImages(List<Product> products) {
+    private void fetchProductsImages(List<Product> products) throws IOException {
         for (Product product: products) {
             List<String> slidePicUrls = product.getSlidePicUrls();
 
-            for (String ulr:slidePicUrls) {
-                httpClientSession.fetchImage(url);
+            for (String urlstr:slidePicUrls) {
+                URL url = new URL(urlstr);
+                httpClientSession.fetchImage(urlstr,url.getFile());
             }
 
         }

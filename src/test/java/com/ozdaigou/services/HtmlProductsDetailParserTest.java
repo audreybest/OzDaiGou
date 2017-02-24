@@ -1,5 +1,7 @@
 package com.ozdaigou.services;
 
+import com.sun.deploy.util.URLUtil;
+import com.sun.tools.internal.xjc.generator.bean.field.UntypedListFieldRenderer;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,9 @@ public class HtmlProductsDetailParserTest {
 
     @Autowired
     private HtmlProductDetailParser htmlProductDetailParser;
+
+    @Autowired
+    ImageStorageService imageStorageService;
 
     @Test
     public void parsePageAndReturnThePrice () throws ParseException {
@@ -74,6 +79,32 @@ public class HtmlProductsDetailParserTest {
 //        assertThat(urls.get(0)).isEqualTo(
 //                "//cdn42.jinriaozhou.com/product/9421902960031/12a9809d9febeb87a622a09a20246869.jpg"
 //        );
+
+        List<String> slidePicUrls = htmlProductDetailParser.getSlidePicUrls();
+
+        for (String url: slidePicUrls) {
+            if (UrlUtils.imgUrlWithDataEmbedded(url)) {
+                String imgType = UrlUtils.imgUrlDataEmbeddedGetImgType(url);
+                imageStorageService.storeImage(
+                        UrlUtils.imgUrlDataEmbeddedGetData(url),
+                        "test2." +  imgType );
+            }
+        }
+
+        List<String> desPicUrls = htmlProductDetailParser.getDescritpionPicUrls();
+        for (String url: desPicUrls) {
+            if (UrlUtils.imgUrlWithDataEmbedded(url)) {
+                String imgType = UrlUtils.imgUrlDataEmbeddedGetImgType(url);
+                imageStorageService.storeImage(
+                        UrlUtils.imgUrlDataEmbeddedGetData(url),
+                        "test2."+
+                                imgType
+                        );
+            }
+
+        }
+
+
 
     }
 

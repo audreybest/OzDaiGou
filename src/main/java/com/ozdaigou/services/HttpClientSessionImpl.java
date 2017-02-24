@@ -11,14 +11,17 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.URLEncoder;
+import java.util.Base64;
 
 /**
  * Created by pandysong on 16/11/17.
@@ -27,10 +30,11 @@ import java.net.URLEncoder;
 @Component
 public class HttpClientSessionImpl implements HttpClientSession {
 
-
-
     @Autowired
     private HttpClient httpClient;
+
+    @Autowired
+    private ImageStorageService imageStorageService;
 
     public HttpClientSessionImpl() {
         //Cookier Manager
@@ -119,4 +123,19 @@ public class HttpClientSessionImpl implements HttpClientSession {
         request.setHeader("User-Agent","Mozilla/5.0 ");
     }
 
+    @Override
+    public void fetchImage(String url,String fileToSave) throws IOException {
+        //need to check if the url is embedded with the image.
+        //Started with data:image/jpeg;base64,
+        HttpGet request = new HttpGet(url);
+        //setHeadersForHttpGetRequest(request);
+        HttpResponse response = httpClient.execute(request);
+        HttpEntity entity= response.getEntity();
+
+        imageStorageService.saveToFile(entity,fileToSave);
+    }
+
+
+
+    }
 }

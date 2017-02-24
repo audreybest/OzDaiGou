@@ -1,19 +1,11 @@
 package com.ozdaigou.services;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.stereotype.Component;
+import org.apache.http.HttpEntity;
 
-@Component
-public class ImageStorageService {
-
-
-    public ImageStorageService() {
-
-        String rootPath = System.getProperty("user.dir");
-        System.out.println(rootPath);
-        String filePath= rootPath +"/src/main/resources/images/";
-
-    }
-
-
+/**
+ * Created by pandysong on 16/11/24.
+ */
+public interface ImageStorageService {
+    public void storeImage(byte[] data, String fileName);
+    public void storeImage(HttpEntity entity, String fileName);
 }
